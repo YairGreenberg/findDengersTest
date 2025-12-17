@@ -1,5 +1,5 @@
 // import { error } from "console";
-
+import { serch } from "../utils/serch.js";
 import fs from "fs";
 import readlineSync from "readline-sync";
 
@@ -12,7 +12,7 @@ export async function GETgreet(BaseURL) {
     const data = await response.json();
     let json = JSON.stringify(data);
 
-    fs.writeFile("PEOPLE.json", json, (data, error) => {
+    fs.writeFile("./server/PEOPLE.json", json, (data, error) => {
       if (error) {
         console.log(error);
       } else {
@@ -24,7 +24,6 @@ export async function GETgreet(BaseURL) {
     return null;
   }
 }
-await GETgreet("https://spiestestserver.onrender.com");
 
 export async function GetCallRecords(BaseURL) {
   try {
@@ -35,7 +34,7 @@ export async function GetCallRecords(BaseURL) {
     const data = await response.json();
     let json = JSON.stringify(data);
 
-    fs.writeFile("TRANSCRIPTIONS.json", json, (data, error) => {
+    fs.writeFile("./server/TRANSCRIPTIONS.json", json, (data, error) => {
       if (error) {
         console.log(error);
       } else {
@@ -48,15 +47,15 @@ export async function GetCallRecords(BaseURL) {
   }
 }
 
-await GetCallRecords("https://spiestestserver.onrender.com");
 
 export async function SearchPeoplebyName() {
-  fs.readFile("PEOPLE.json", "utf-8", (err, callback) => {
+    
+  fs.readFile("./server/PEOPLE.json", "utf-8", (err, callback) => {
     if (err) {
       console.log(err);
     } else {
       let list = JSON.parse(callback);
-      let name = readlinkSync.question("please enter a name:\n");
+      let name = readlineSync.question("please enter a name:\n");
       for (let object of list) {
         if (object.name === name) {
           console.log(object);
@@ -69,12 +68,12 @@ export async function SearchPeoplebyName() {
 }
 
 export async function SearchPeoplebyAge() {
-  fs.readFile("PEOPLE.json", "utf-8", (err, callback) => {
+  fs.readFile("./server/PEOPLE.json", "utf-8", (err, callback) => {
     if (err) {
       console.log(err);
     } else {
       let list = JSON.parse(callback);
-      let age = readlinkSync.question("please enter a age:\n");
+      let age = readlineSync.question("please enter a age:\n");
       for (let object of list) {
         if (object.age === age) {
           console.log(object);
@@ -87,91 +86,64 @@ export async function SearchPeoplebyAge() {
 }
 
 export async function FindDangerousPeople() {
+    let list_trans = []
+    let Dangerlevel = 0
+    let list_msg =[]
+    
   fs.readFile("TRANSCRIPTIONS.json", "utf8", (error, data) => {
     if (error) {
       console.log(error);
     }else{
-        let listTrans = JSON.parse(data)
+        const listTrans = JSON.parse(data)
         console.log(listTrans); 
-    }
-    
-    for( let object of listTrans){
-        console.log(object);
+        for(let item of listTrans){
+            let split = item.content.split(" ")
+            for(let word of split){
+                if(word.toLowerCase() === "death"|| word.toLowerCase() === "attack"||word.toLowerCase() === "bomb"||word.toLowerCase() === "knife" )
+                    Dangerlevel+=1
+            }
+            list_msg.push(Dangerlevel)
+            let agePremter = serch(item.age,Dangerlevel)
+            list_trans.push(agePremter);   
+                
         
     }
+    
 
+    }
+ 
   });
 }
-await FindDangerousPeople()
-// async function POSTMathAverage(BaseURL)
-// {
-//     try{
-//         let numbersInput = readlineSync.question("Enter numbers separated by commas: ")
-//         let numbers = numbersInput.split(',').map(Number)
-//         const resource = await fetch(`${BaseURL}/math/average`,{
-//             method: "POST",
-//             headers:{
-//             "Content-Type": "application/json"
-//             },
-//         body: JSON.stringify({"numbers": numbers})}
-//         )
-//         if(!resource){
-//             throw new Error(`http: ${response.status}`)
-//         }
-//         const data = await resource.json()
-//         if (data) {
-//             console.log(data);
 
-//         }
-//     }catch(error){
-//         console.error(error.message);
-//         return null;
-//     }
 
-// }
 
-// async function PUTshoutWord(BaseURL)
-// {
-//     try{
-//         let word = readlineSync.question("Enter a word to shout: ")
-//         const resource = await fetch(`${BaseURL}/shout/${word}`,{
-//             method : "PUT",
-//             headers:{
-//             "Content-Type": "application/json"
-//             }
-//         })
-//         if(!resource){
-//             throw new Error(`http: ${response.status}`)
-//         }
-//         const data = await resource.json()
-//         if(data){
-//             console.log(data);
 
-//         }
-//     }catch(error){
-//         console.error(error.message);
-//         return null;
-//     }
-// }
 
-// async function DELETEsecureResource(BaseURL)
-// {
-//     try{
-//         let admin = readlineSync.question("Enter your role to access secure resource: ")
-//         const resource = await fetch(`${BaseURL}/secure/resource`,{
-//             method: "DELETE",
-//             headers:{"x-role": admin}
-//         })
-//         if(!resource){
-//             throw new Error(`http: ${response.status}`)
-//         }
-//         const data = await resource.json()
-//         if(data){
-//             console.log(data);
 
-//         }
-//     }catch(error){
-//         console.error(error.message);
-//         return null;
-//     }
-// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

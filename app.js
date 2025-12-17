@@ -1,5 +1,5 @@
 import readlineSync from 'readline-sync';
-import { GETgreet,SearchPeoplebyName, GetCallRecords,SearchPeoplebyAge} from './server/CRUD.js';
+import { GETgreet,SearchPeoplebyName, GetCallRecords,SearchPeoplebyAge,FindDangerousPeople} from './server/CRUD.js';
 const BaseURL = "https://spiestestserver.onrender.com"
 
 
@@ -12,8 +12,7 @@ function manu()
                  2.GetCallRecords
                  3.SearchPeoplebyName
                  4.SearchPeoplebyAge
-                 5.Call each server endpoint one after the other (in sequence)
-                 6.Call all server endpoints in parallel
+                 5.FindDangerousPeople
                  0.Exit
                  _____________________________________________________________`);
     
@@ -39,17 +38,15 @@ while(bool)
             await GetCallRecords(BaseURL);
             break;  
         case 3:
-            await SearchPeoplebyName(BaseURL);
+            await SearchPeoplebyName();
             break;
         case 4:
-            await SearchPeoplebyAge(BaseURL);
+            await SearchPeoplebyAge();
             break;
         case 5:
-            await CallAllEndpointsSequentially(BaseURL);
+            await FindDangerousPeople();
             break;
-        case 6:
-            await CallAllEndpointsInParallel(BaseURL);
-            break;
+      
         case 0:
             bool = false;
             console.log("Exiting...");

@@ -1,14 +1,14 @@
-export function serch(age,msg){
+export function serch(age){
     return{
         age:age,
-        list:[msg]
+        danger :[]
     }
 }
 
 export function averg(list)
 {
-    return{
+    return  [{
         age:age,
         danger :danger 
-    }
+    }]
 }

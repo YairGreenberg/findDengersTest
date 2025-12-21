@@ -1,6 +1,6 @@
 import readlineSync from 'readline-sync';
 import { GETgreet,SearchPeoplebyName, GetCallRecords,SearchPeoplebyAge,FindDangerousPeople} from './server/CRUD.js';
-const BaseURL = "https://spiestestserver.onrender.com"
+export const BaseURL = "https://spiestestserver.onrender.com"
 
 
 

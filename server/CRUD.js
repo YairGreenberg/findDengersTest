@@ -1,7 +1,9 @@
-import { count, log } from "console";
-import { serch } from "../utils/serch.js";
+// import { count, log } from "console";
+// import { averg } from "../utils/serch.js";
+import { avergeOfMassege,getThreeHighestAverageDanger} from "../utils/serch.js";
 import fs from "fs/promises";
 import readlineSync from "readline-sync";
+import { BaseURL } from "../app.js";
 
 
 export async function GETgreet(BaseURL) {  
@@ -110,7 +112,46 @@ export async function FindDangerousPeople() {
         }
     }  
     
-    // console.table(list_danger);
+    const average_danger = avergeOfMassege(list_danger);
+    const three_highest_danger = getThreeHighestAverageDanger(average_danger);
+    console.log("The three most dangerous people are:");
+    console.log(three_highest_danger);
+
+    const data_people = await fs.readFile("server/PEOPLE.json", "utf-8");
+    let list_people = JSON.parse(data_people);
+    let result_people_denders = [];
+    for (let danger_person of three_highest_danger) {
+        let person_info = list_people.find((person) => person.age === danger_person.age);
+        if(person_info){
+          result_people_denders.push({
+            ...person_info,
+            average_danger: danger_person.average_danger
+        });
+          continue;
+        }
+    }
+    console.log(result_people_denders);
+    await sendRequest(BaseURL,result_people_denders);
+
+
+  } catch (error) {
+    console.error(`error: ${error.message}`);
+    return null;
+  }
+}
+
+export async function sendRequest(BaseURL,reportData) {
+  try {
+    const jsonString = JSON.stringify(reportData);
+    const encodedData = encodeURIComponent(jsonString);
+    
+    const response = await fetch(`${BaseURL}/report?data=${encodedData}`);
+    
+    if (!response.ok) {
+      throw new Error(`http: ${response.status}`);
+    }
+    const result = await response.text();
+    console.log("Report sent successfully:", result);
   } catch (error) {
     console.error(`error: ${error.message}`);
     return null;
